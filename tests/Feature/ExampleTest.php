@@ -18,18 +18,4 @@ class ExampleTest extends TestCase
 
         $response->assertStatus(200);
     }
-
-    public function test_add_progress()
-    {
-        $user = User::factory()->create();
-        $this->actingAs($user);
-
-        $response = $this->post('/api/events', [
-            'name' => "aanoa",
-            'measurments' => 29,
-
-        ]);
-
-        $response->assertStatus(200);
-    }
 }

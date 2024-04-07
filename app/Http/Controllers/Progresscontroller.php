@@ -6,6 +6,7 @@ use App\Http\Requests\ProgressRequest;
 use App\Http\Resources\ProgressResource;
 use App\Models\Progress;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class Progresscontroller extends Controller
 {
@@ -14,7 +15,7 @@ class Progresscontroller extends Controller
      */
     public function index()
     {
-        return ProgressResource::collection(Progress::with('user')->get());
+        return ProgressResource::collection(Progress::with('user')->where("user_id", Auth::user()->id)->get());
     }
 
     /**
@@ -40,13 +41,34 @@ class Progresscontroller extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Progress $progress)
+    public function update(ProgressRequest $request, string $id)
     {
-        $udateProgress =  $progress->update([
+        $progress = Progress::find($id);
+        $progress->update([
             ...$request->validated()
         ]);
 
-        return  new ProgressResource($udateProgress);
+        return response()->json($progress);
+    }
+
+    public function updateStatus(Request $request, string $id)
+    {
+
+        $validatedData = $request->validate([
+            'status' => 'required',
+        ]);
+        $progress = Progress::find($id);
+
+        $success = $progress->update([
+            'status' => $validatedData['status'],
+        ]);
+
+        if ($success) {
+            $data = [
+                'message' => $progress
+            ];
+            return response()->json($data, 200);
+        }
     }
 
     /**
