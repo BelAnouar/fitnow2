@@ -22,9 +22,13 @@ class ProgressRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required',
-
-            'measurments' => 'required',
+            'poids' => 'required|numeric',
+            'Poitrine' => 'required|numeric',
+            'Mollet' => 'required|numeric',
+            'Bras' => 'required|numeric',
+            'Hauteur' => 'required|numeric',
+            'PoidsLeve' => 'required|numeric',
+            'TempsDeCourse' => 'required|numeric',
         ];
     }
 }

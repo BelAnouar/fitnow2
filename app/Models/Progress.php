@@ -10,9 +10,15 @@ class Progress extends Model
 {
     use HasFactory;
     protected $fillable = [
-        'name',
-        'measurments',
-        'status', "user_id"
+        'userId',
+        'poids',
+        'Mollet',
+        'Bras',
+        'TempsDeCourse',
+        'PoidsLeve',
+        'Hauteur',
+        'Poitrine',
+        'status',
     ];
 
     public function user(): BelongsTo

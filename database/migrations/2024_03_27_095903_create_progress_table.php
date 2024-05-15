@@ -14,10 +14,15 @@ return new class extends Migration
     {
         Schema::create('progress', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('measurments');
-            $table->boolean('status')->default(false);
-            $table->foreignIdFor(User::class);
+            $table->foreignId('userId')->constrained('users')->onDelete('cascade');
+            $table->integer('poids');
+            $table->integer('Poitrine');
+            $table->integer('Mollet');
+            $table->integer('Bras');
+            $table->integer('Hauteur');
+            $table->integer('PoidsLeve');
+            $table->integer('TempsDeCourse');
+            $table->enum('status',['terminé' ,'NonTerminé'])->default('NonTerminé');
             $table->timestamps();
         });
     }

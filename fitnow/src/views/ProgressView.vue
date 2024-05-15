@@ -1,0 +1,243 @@
+<template>
+<Navbar/>
+    <div class="relative bg-gradient-to-r mt-1 from-orange-900 to-red-800 py-16 font-[sans-serif]">
+        <div class="relative max-w-screen-xl mx-auto px-8 z-10 text-center text-white">
+            <h1 class="text-4xl md:text-5xl font-extrabold leading-tight mb-6">Welcome to Our Exclusive Service</h1>
+            <p class="text-lg md:text-xl mb-8">Discover excellence like never before with our premium products and
+                services.</p>
+            <router-link to="/">
+                <button type="button"
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white text-base font-semibold px-8 py-2.5 rounded-full transition duration-300 ease-in-out shadow-lg hover:shadow-xl">Add
+                    Progression</button>
+            </router-link>
+        </div>
+    </div>
+
+
+    <div class=" mt-4 text-center">
+        <h2
+            class="text-3xl font-extrabold text-[#333] inline-block relative ">
+            Mes Progressions</h2>
+    </div>
+
+    <div class=" mt-16 relative overflow-x-auto shadow-md sm:rounded-lg">
+        <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+            <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+            <tr>
+                <th scope="col" class="px-6 py-3">
+                    ID
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Poids
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Hauteur
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Poitrine
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Mollet
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Bras
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    PoidsLeve
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    TempsDeCourse
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    status
+                </th>
+                <th scope="col" class="px-6 py-3">
+                    Action
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+
+            <tr v-for="progression in progress" :key="progression.id"
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white">
+                    {{ progression.id }}
+                </th>
+                <td class="px-6 py-4">
+                    {{ progression.poids }} Kg
+                </td>
+                <td class="px-6 py-4">
+                    {{ progression.Hauteur }} Cm
+                </td>
+                <td class="px-6 py-4">
+                    {{ progression.Poitrine }} Cm
+                </td>
+                <td class="px-6 py-4">
+                    {{ progression.Mollet }} Cm
+                </td>
+                <td class="px-6 py-4">
+                    {{ progression.Bras }} Cm
+                </td>
+                <td class="px-6 py-4">
+                    {{ progression.PoidsLeve }} Kg
+                </td>
+                <td class="px-6 py-4">
+                    {{ progression.TempsDeCourse }} Min
+                </td>
+                <td class="px-6 py-4">
+            <span v-if="progression.status === 'NonTerminé'"
+                  class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+              {{ progression.status }}
+            </span>
+                    <span v-else
+                          class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+              {{ progression.status }}
+            </span>
+                </td>
+                <td class="flex items-center px-6 py-4">
+                    <button @click="updateModal(progression.id)"
+                            class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</button>
+
+                    <button @click="deleteProgression(progression.id)"
+                            class="font-medium text-red-600 dark:text-red-500 hover:underline ms-3">Remove</button>
+                    <div v-if="progression.status !== 'terminé'">
+                        <button @click="complete(progression.id)"
+                                class="font-medium text-green-600 dark:text-red-500 hover:underline ms-3">Complete</button>
+                    </div>
+                    <div v-else>
+                        <p class="ms-3">deja terminé</p>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div  id="crud-modal"
+          class="hidden fixed inset-0 p-4 flex flex-wrap justify-center items-center w-full h-full z-[1000] before:fixed before:inset-0 before:w-full before:h-full before:bg-[rgba(0,0,0,0.5)] overflow-auto font-[sans-serif]">
+        <div class="w-full max-w-md bg-white shadow-lg rounded-lg px-5 py-8 relative">
+            <!-- Modal body -->
+            <div>
+                <form class="mt-16 font-[sans-serif] m-6 max-w-4xl mx-auto">
+                    <div class="grid sm:grid-cols-2 gap-10">
+                        <div class="relative flex items-center">
+                            <label
+                                class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">poids</label>
+                            <input v-model="ProgressForm.poids" type="number" placeholder="Enter poids"
+                                   class="px-4 mx-2 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none"
+                                   />
+                        </div>
+                        <div class="relative flex items-center">
+                            <label
+                                class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Poitrine</label>
+                            <input v-model="ProgressForm.Poitrine" type="number" placeholder="Enter Poitrine"
+                                   class="px-4 mx-2 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none" />
+                        </div>
+                        <div class="relative flex items-center">
+                            <label
+                                class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Mollet</label>
+                            <input v-model="ProgressForm.Mollet" type="number" placeholder="Enter mollet."
+                                   class="px-4 mx-2 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none" />
+                        </div>
+                        <div class="relative flex items-center">
+                            <label
+                                class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Bras</label>
+                            <input v-model="ProgressForm.Bras" type="number" placeholder="Enter Bras"
+                                   class="px-4 mx-2 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none" />
+                        </div>
+                        <div class="relative flex items-center">
+                            <label
+                                class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">Hauteur</label>
+                            <input v-model="ProgressForm.Hauteur" type="number" placeholder="Enter Hauteur"
+                                   class="px-4 mx-2 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none" />
+                        </div>
+                        <div class="relative flex items-center">
+                            <label
+                                class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">PoidsLeve</label>
+                            <input v-model="ProgressForm.PoidsLeve" type="number" placeholder="Enter poids"
+                                   class="px-4 mx-2 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none" />
+                        </div>
+                        <div class="relative flex items-center sm:col-span-2">
+                            <label
+                                class="text-[13px] bg-white text-black absolute px-2 top-[-10px] left-[18px] font-semibold">TempsDeCourse</label>
+                            <input v-model="ProgressForm.TempsDeCourse" type="number"
+                                   placeholder="Enter TempsDeCourse"
+                                   class="px-4 mx-2 py-3.5 bg-white text-black w-full text-sm border-2 border-gray-100 focus:border-blue-500 rounded outline-none" />
+                        </div>
+                    </div>
+                    <button @click="updatedProgression(ProgressForm.id)" type="button"
+                            class="mx-auto m-4 mb-2 block px-6 py-2.5 text-sm font-semibold bg-blue-500 text-white rounded hover:bg-blue-600">
+                        Submit
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+</template>
+
+
+v<script setup>
+import Navbar from "@/components/Navbar.vue";
+import { useProgressStore } from "@/stores/ProgressStore.js";
+import {computed, onMounted, ref, watch} from "vue";
+
+const storeProgress = useProgressStore();
+const progress = computed(() => {
+    return storeProgress.progress;
+});
+const editedProgression = computed(() => {
+    return storeProgress.editedProgression;
+});
+
+const ProgressForm = ref({
+    id: '',
+    poids: '',
+    Poitrine: '',
+    Mollet: '',
+    Bras: '',
+    Hauteur: '',
+    PoidsLeve: '',
+    TempsDeCourse: ''
+});
+watch(editedProgression, (newValue) => {
+    ProgressForm.value = {
+        ...ProgressForm.value,
+        id: newValue?.id || '',
+        poids: newValue?.poids || '',
+        Poitrine: newValue?.Poitrine || '',
+        Mollet: newValue?.Mollet || '',
+        Bras: newValue?.Bras || '',
+        Hauteur: newValue?.Hauteur || '',
+        PoidsLeve: newValue?.PoidsLeve || '',
+        TempsDeCourse: newValue?.TempsDeCourse || ''
+    };
+});
+
+onMounted(() => {
+    storeProgress.fetchProgress();
+});
+
+function deleteProgression(id) {
+    storeProgress.deleteProgress(id);
+}
+
+function updateModal(id) {
+    storeProgress.editProgress(id);
+    const model = document.getElementById('crud-modal');
+    model.classList.remove('hidden');
+}
+
+function updatedProgression(id) {
+    storeProgress.updateProgress(ProgressForm.value,id);
+    const model = document.getElementById('crud-modal');
+    model.classList.add('hidden');
+}
+
+
+function complete(id){
+    storeProgress.updateComplete(id)
+}
+
+</script>
+

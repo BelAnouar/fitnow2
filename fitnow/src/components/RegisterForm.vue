@@ -1,11 +1,15 @@
 <script >
 import { AuthStore } from '@/stores/AuthStore';
+import router from "@/router/index.js";
+import {useRouter} from "vue-router";
 
-    
+
+
     export  default{
           setup(){
+              const router = useRouter()
              const authStore=AuthStore()
-             return {authStore}
+             return {authStore,router}
           },
 
           data(){
@@ -18,7 +22,8 @@ import { AuthStore } from '@/stores/AuthStore';
           methods:{
             async register(){
                 const values={"name":this.fullname , "email":this.email,"password": this.password}
-              this.authStore.register(values)
+                this.authStore.register(values)
+                this.router.push("/login")
             }
           }
     }
@@ -28,7 +33,7 @@ import { AuthStore } from '@/stores/AuthStore';
 
 <main class="p-8">
     <div class="flex max-w-sm mx-auto overflow-hidden bg-white rounded-lg shadow-lg lg:max-w-4xl">
-        <div class="hidden bg-cover lg:block lg:w-1/2" style="background-image:url('https://images.unsplash.com/photo-1546514714-df0ccc50d7bf?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=667&q=80')">
+        <div class="hidden bg-cover lg:block lg:w-1/2" style="background-image:url('https://wallpaperaccess.com/full/5469421.jpg')">
         </div>
         <div class="w-full p-8 lg:w-1/2">
             <h2 class="text-2xl font-semibold text-center text-gray-700">Register</h2>
@@ -61,5 +66,5 @@ import { AuthStore } from '@/stores/AuthStore';
     </div>
 </main>
 
- 
+
 </template>

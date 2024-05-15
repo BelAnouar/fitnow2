@@ -15,7 +15,7 @@ class Progresscontroller extends Controller
      */
     public function index()
     {
-        return ProgressResource::collection(Progress::with('user')->where("user_id", Auth::user()->id)->get());
+        return Progress::with('user')->where("userId", Auth::user()->id)->get();
     }
 
     /**
@@ -23,19 +23,23 @@ class Progresscontroller extends Controller
      */
     public function store(ProgressRequest $request)
     {
-        $progress =  Progress::create([
-            ...$request->validated(), 'user_id' => $request->user()->id
+        Progress::create([
+            ...$request->validated(), 'userId' => Auth::user()->id
         ]);
 
-        return  new ProgressResource($progress);
+        return response()->json([
+            'message' => 'Success',
+
+        ]);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Progress $progress)
+    public function show(string $id)
     {
-        //
+        $progress = Progress::find($id);
+       return  response()->json($progress);
     }
 
     /**
@@ -51,16 +55,14 @@ class Progresscontroller extends Controller
         return response()->json($progress);
     }
 
-    public function updateStatus(Request $request, string $id)
+    public function updateStatus(string $id)
     {
 
-        $validatedData = $request->validate([
-            'status' => 'required',
-        ]);
+
         $progress = Progress::find($id);
 
         $success = $progress->update([
-            'status' => $validatedData['status'],
+            'status' => 'terminé',
         ]);
 
         if ($success) {
@@ -74,10 +76,10 @@ class Progresscontroller extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Progress $progress)
+    public function destroy(string $id)
     {
-        $progress->delete();
-
-        return response()->json(["message" => "progress detlete  "]);
+     $progress=  Progress::find($id);
+     $progress->delete();
+        return response()->json(["message" => "progress deleted"]);
     }
 }
